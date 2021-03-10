@@ -1,0 +1,10 @@
+*.sqlite3
+*.secret
+*.pickle
+dblp/*.dtd
+dblp/*.xml
+dblp/*.gz
+dblp/*.md5
+
+# Python
+__pycache__
