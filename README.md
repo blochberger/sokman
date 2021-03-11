@@ -101,6 +101,16 @@ If you want to get the BIB entry from DBLP:
 ./manage.py dblptex 'DBLP:conf/ease/PetersenFMM08' >> references.bib
 ```
 
+## Sharing SoKs
+
+```sh
+# Export
+./manage.py dumpdata --natural-primary --natural-foreign sok | jq --sort-keys > "$(date '+%Y-%m-%d')-sk.json"
+
+# Import
+./manage.py loaddata 2021-03-11-sok.json
+```
+
 ## Installation
 
 ```sh
