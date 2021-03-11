@@ -7,7 +7,9 @@ dblp/*.gz
 dblp/*.md5
 fixtures/*.json
 graphs/*.dot
+graphs/*.pdf
 graphs/*.svg
+graphs/*.tex
 
 # Python
 __pycache__

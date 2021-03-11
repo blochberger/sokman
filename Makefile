@@ -11,7 +11,9 @@ all: graphs/citations.svg graphs/sok.svg
 
 clean:
 	rm -f graphs/*.dot
+	rm -f graphs/*.pdf
 	rm -f graphs/*.svg
+	rm -f graphs/*.tex
 
 .dot.pdf:
 	$(DOT) -Tpdf -o$*.pdf $<
