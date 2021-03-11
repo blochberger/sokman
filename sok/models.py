@@ -58,15 +58,9 @@ class SearchTerm(models.Model):
 
 
 class Publication(models.Model):
-	cite_key = models.CharField(
-		max_length=255,
-		unique=True,
-		blank=True, # TODO REMOVE
-		null=True, # TODO REMOVE
-	)
+	cite_key = models.CharField(max_length=255, unique=True)
 	title = models.CharField(max_length=255)
 	year = models.PositiveSmallIntegerField()
-	references_complete = models.BooleanField(default=False)
 	peer_reviewed = models.BooleanField(null=True, default=None)
 	classified = models.BooleanField(default=False)
 	first_page = models.PositiveSmallIntegerField(blank=True, null=True, default=None)

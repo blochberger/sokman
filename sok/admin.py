@@ -314,7 +314,6 @@ class PublicationAdmin(admin.ModelAdmin):
 		PublicationStageFilter,
 		PublicationRelevanceFilter,
 		'classified',
-		'references_complete',
 		'peer_reviewed',
 		PublicationVariantFilter,
 		#'year',
