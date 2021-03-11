@@ -85,7 +85,10 @@ Tags and citations can be exported in DOT format, which can be rendered using Gr
 ./manage.py citations --min-citations 10 > citations.dot && dot -Tsvg -ocitations.svg citations.dot
 
 # Render tag DAG
-./manage.py tagtag --root 'Literature on Systematic Mapping' > sysmap.dot && dot -Tsvg -osysmap.svg sysmap.dot
+./manage.py tagtag --root 'Literature on Systematic Mapping' --threshold 1 > sysmap.dot && dot -Tsvg -osysmap.svg sysmap.dot
+
+# Render classification for a single publication
+./manage.py tagtag 'DBLP:conf/ease/PetersenFMM08' > petersen08.dot && dot -Tsvg -opetersen08.svg petersen08.dot
 
 # Render with TIKZ
 pip install dot2tex
