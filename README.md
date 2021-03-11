@@ -1,4 +1,4 @@
-# `sokman` – Manges your SoKs
+# `sokman` – Manages your SoKs
 
 `sokman` aids in creating reproducible systematic mappings or systematic literature reviews and tries to automate some of the tedious tasks, such as searching, snowballing, and exporting a visual graph representation of the created systematization of knowledge (SoK).
 
