@@ -4,13 +4,13 @@ from typing import Optional, Set, Tuple
 
 from django.core.management.base import BaseCommand, CommandParser
 
-from sok.models import Publication, Tag
+from sok.models import Publication, PublicationTag, Tag
 
 
 class Command(BaseCommand):
 
-	def echo(self, msg: str):
-		self.stdout.write(msg)
+	def echo(self, msg: str, nl: bool = True):
+		self.stdout.write(msg, ending='\n' if nl else '')
 
 	def add_node(
 		self,
@@ -31,13 +31,28 @@ class Command(BaseCommand):
 
 		name = html.escape(node.name)
 		self.echo(f"\tT{node.pk} [")
-		if include_publications:
-			pubs = ','.join([str(t.pk) for t in publications])
-			self.echo(f'\t\tlabel="{name}|{{{num}|{pubs}}}",')
+		self.echo(f'\t\tlabel="{name}', nl=False)
+		implicit: bool = False
+		if publication is None:
+			if include_publications:
+				pubs = ','.join([str(t.pk) for t in publications])
+				self.echo(f"|{{{num}|{pubs}}}", nl=False)
+			else:
+				self.echo(f"|{num}", nl=False)
 		else:
-			self.echo(f'\t\tlabel="{name}|{num}",')
+			try:
+				rel = PublicationTag.objects.get(publication=publication, tag=node)
+				if comment := rel.comment:
+					comment = html.escape(rel.comment)
+					self.echo(f"|{comment}", nl=False)
+			except PublicationTag.DoesNotExist:
+				implicit = True
+		self.echo('",')
 		if 0 == num:
 			self.echo("\t\tcolor=red,")
+		if implicit:
+			self.echo("\t\tcolor=gainsboro,")
+			self.echo("\t\tfontcolor=gray,")
 		self.echo("\t];")
 
 		self.nodes.add(node.pk)
@@ -54,7 +69,7 @@ class Command(BaseCommand):
 			if edge[::-1] in self.graph:
 				self.stderr.write(self.style.ERROR(f"CYCLE: '{node}' <-> '{predecessor}'"))
 			self.graph.add(edge)
-			self.echo(f'\t"T{predecessor.pk}" -> "T{node.pk}";')
+			self.echo(f"\tT{predecessor.pk} -> T{node.pk};")
 			self.add_edge(predecessor)
 
 	def graphviz(
