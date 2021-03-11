@@ -5,6 +5,9 @@ dblp/*.dtd
 dblp/*.xml
 dblp/*.gz
 dblp/*.md5
+fixtures/*.json
+graphs/*.dot
+graphs/*.svg
 
 # Python
 __pycache__

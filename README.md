@@ -82,18 +82,32 @@ Tags and citations can be exported in DOT format, which can be rendered using Gr
 
 ```sh
 # Render relevant publications that have more than ten citations
-./manage.py citations --min-citations 10 > citations.dot && dot -Tsvg -ocitations.svg citations.dot
+./manage.py citations --min-citations 10 > graphs/citations.dot && make graphs/citations.svg
+# or
+make graphs/citations.svg
 
 # Render tag DAG
-./manage.py tagtag --root 'Literature on Systematic Mapping' --threshold 1 > sysmap.dot && dot -Tsvg -osysmap.svg sysmap.dot
+./manage.py tagtag --root 'Literature on Systematic Mapping' --threshold 1 > graphs/sysmap.dot && make graphs/sysmap.svg
 
 # Render classification for a single publication
-./manage.py tagtag 'DBLP:conf/ease/PetersenFMM08' > petersen08.dot && dot -Tsvg -opetersen08.svg petersen08.dot
+./manage.py tagtag 'DBLP:conf/ease/PetersenFMM08' > graphs/petersen08.dot && make graphs/petersen08.svg
 
 # Render with TIKZ
 pip install dot2tex
-dot2tex -f tikz --usepdflatex sysmap.dot > sysmap.tex
+make graphs/citations.tex
 ```
+
+You can edit the `Makefile` so that you can generate all graphs quickly with:
+```sh
+make -j 4
+```
+
+An example graph generated with:
+```sh
+./manage.py tagdag --root 'Methodology' 'DBLP:conf/ccs/EgeleBFK13' > example.dot && make example.svg
+```
+
+<img src="example.svg" width="838px" alt="Example graph"/>
 
 If you want to get the BIB entry from DBLP:
 
@@ -105,10 +119,10 @@ If you want to get the BIB entry from DBLP:
 
 ```sh
 # Export
-./manage.py dumpdata --natural-primary --natural-foreign sok | jq --sort-keys > "$(date '+%Y-%m-%d')-sk.json"
+./manage.py dumpdata --natural-primary --natural-foreign sok | jq --sort-keys > "fixtures/$(date '+%Y-%m-%d')-sk.json"
 
 # Import
-./manage.py loaddata 2021-03-11-sok.json
+./manage.py loaddata fixtures/2021-03-11-sok.json
 ```
 
 ## Installation
