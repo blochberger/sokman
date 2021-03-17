@@ -12,7 +12,7 @@ Data sources:
 
 `sokman` helps keeping track of a systematic mapping process, as described by Petersen [1]. The steps can be performed as described below.
 
-### Deﬁnition of Research Quesiton
+### Deﬁnition of Research Question
 
 Sorry, not automated, yet.
 
