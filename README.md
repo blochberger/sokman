@@ -16,7 +16,7 @@ A list of SoKs that were created or can be used with `sokman` (see [*Sharing SoK
 
 ## Systematic Mapping
 
-`sokman` helps keeping track of a systematic mapping process, as described by Petersen [1]. The steps can be performed as described below.
+`sokman` helps keeping track of a systematic mapping process, as described by Petersen [[1](#references)]. The steps can be performed as described below.
 
 ### Deﬁnition of Research Question
 
@@ -160,6 +160,6 @@ cd ..
 ./manage.py runserver
 ```
 
----
+## References
 
 1. Kai Petersen, Robert Feldt, Shahid Mujtaba, Michael Mattsson: [**Systematic Mapping Studies in Software Engineering**](http://ewic.bcs.org/content/ConWebDoc/19543), EASE 2008
