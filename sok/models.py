@@ -179,5 +179,11 @@ class PublicationReference(models.Model):
 	reference = models.ForeignKey(Publication, on_delete=models.CASCADE, related_name='cited_by')
 	identifier = models.CharField(max_length=255, blank=True, null=True, default=None)
 
+	@property
+	def is_self_cite(self) -> bool:
+		lhs: Set[int] = set(self.publication.authors.values_list('pk', flat=True))
+		rhs: Set[int] = set(self.reference.authors.values_list('pk', flat=True))
+		return not lhs.isdisjoint(rhs)
+
 	class Meta:
 		unique_together = (('publication', 'reference'), ('publication', 'identifier'))
