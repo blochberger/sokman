@@ -8,6 +8,12 @@ Data sources:
 - [DBLP](https://dblp.org) is used for searching publications, importing publications, and exporting Bibtex entries
 - [Semantic Scholar](https://semanticscholar.org) is used for snowballing.
 
+## SoKs
+
+A list of SoKs that were created or can be used with `sokman` (see [*Sharing SoKs*](#sharing-soks)).
+
+- [Cryptographic Misuse](https://gist.github.com/blochberger/745726117bb2e7143542c0f2be6c6337)
+
 ## Systematic Mapping
 
 `sokman` helps keeping track of a systematic mapping process, as described by Petersen [1]. The steps can be performed as described below.
