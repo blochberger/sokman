@@ -11,7 +11,15 @@ import requests
 from django.core.management.base import BaseCommand, CommandParser, CommandError
 from tqdm import tqdm
 
-from sok.models import Publication, PublicationReference, SemanticScholar
+from sok.models import (
+	Author,
+	Publication,
+	PublicationAuthor,
+	PublicationReference, 
+	PublicationSource,
+	SemanticScholar,
+	Source,
+)
 
 
 def semanticscholar(identifier: str, include_unknown_references: bool = False) -> Dict[str, Any]:
@@ -104,6 +112,7 @@ class Command(BaseCommand):
 		title = "Reference" if is_reference else "Citation"
 		if 0 < len(objs):
 			self.echo(f"--- {title}s ---")
+		publications: List[Publication] = []
 		for obj in tqdm(objs, unit=title.lower()):
 			if paper_id := obj.get('paperId', None):
 				try:
@@ -155,6 +164,75 @@ class Command(BaseCommand):
 						self.echo(abstract)
 				elif choice in {'', 'n', 'no'}:
 					# TODO Import?
+					data = semanticscholar(paper_id)
+					# Add authors to database
+					authors: List[Author] = []
+					first = True
+					cite_key = ''
+					for author in data.get('authors', []):
+						name = author.get('name', '')
+						author, created = Author.objects.get_or_create(name=name)
+						if created:
+							self.echo(f"Added author: {author}")
+						else:
+							self.echo(f"Author '{author}' alreay known")
+						authors.append(author)
+						if first:
+							first = False
+							if name.rindex(' ') > -1:
+								cite_key = name[name.rindex(' '):]
+							else:
+								cite_key = name
+								
+					cite_key += str(data.get('year'))
+					
+					title = data.get('title', '')
+					if title.index(' ') > -1:
+						cite_key += title[:title.index(' ')]
+					else:
+						cite_key += title
+						
+					cite_key = cite_key.lower()
+					
+					# Add publication to database
+					doi = None if data.get('doi', None) == "None" else data.get('doi', None)
+					publication, created = Publication.objects.get_or_create(
+						cite_key=cite_key,
+						title=title,
+						year=data.get('year', 0),
+						peer_reviewed=False,
+						doi=doi,
+					)
+					if created:
+						self.echo(f"Added publication: {publication}")
+					else:
+						self.echo(f"Publication '{publication}' already known")
+					publications.append(publication)
+
+					# Assign authors
+					for position, author in enumerate(authors):
+						publication_author, created = PublicationAuthor.objects.get_or_create(
+							author=author,
+							publication=publication,
+							position=position,
+						)
+						if created:
+							self.echo(f"Assigned author '{author}' to publication '{publication}' at position {position}")
+						else:
+							self.echo(f"Author '{author}' already assigned to publication '{publication}' at position '{position}'")
+					
+					# Add to Semantic Scholar and link publications
+					if doi:
+						publication = Publication.objects.get(doi=doi)
+						new = SemanticScholar(paper_id=paper_id, publication=publication)
+						new.full_clean()
+						new.save()
+						self.echo(f"New Semantic Scholar entry: {paper_id}")
+						if is_reference:
+							self.add_reference(base, new.publication)
+						else:
+							self.add_reference(new.publication, base, is_reference)
+						
 					break
 
 	# BaseCommand
